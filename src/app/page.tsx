@@ -1,6 +1,19 @@
+'use client';
+
+import { useKeycloak } from '@/components/KeycloakProvider';
 import Image from "next/image";
 
 export default function Home() {
+  const { keycloak, authenticated } = useKeycloak();
+
+  const handleLogin = () => {
+    keycloak.login();
+  };
+
+  const handleLogout = () => {
+    keycloak.logout();
+  };
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
@@ -47,6 +60,33 @@ export default function Home() {
           >
             Read our docs
           </a>
+        </div>
+
+        <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm">
+          <h1 className="text-4xl font-bold mb-8">Welcome to Next.js with Keycloak</h1>
+          
+          {authenticated ? (
+            <div className="space-y-4">
+              <p className="text-xl">You are logged in!</p>
+              <p>Username: {keycloak.tokenParsed?.preferred_username}</p>
+              <button
+                onClick={handleLogout}
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <p className="text-xl">Please log in to continue</p>
+              <button
+                onClick={handleLogin}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Login
+              </button>
+            </div>
+          )}
         </div>
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
